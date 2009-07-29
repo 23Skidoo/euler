@@ -14,7 +14,6 @@ distinct a xs = and [ x /= a | x <- xs ]
 num_distinct :: (Eq a) => [a] -> [a] -> Int
 num_distinct xs ys = sum' . map fromEnum . map (flip ($) ys) $ (map distinct xs)
 
-
 two_distinct :: (Eq a) => [a] -> [a] -> Bool
 two_distinct a b = num_distinct a b == 2 && num_distinct b a == 2
 
