@@ -166,4 +166,3 @@ proper_divisors n = delete n . divisors $ n
 -- How many proper divisors does a number have?
 num_proper_divisors :: (Integral a) => a -> Int
 num_proper_divisors = subtract 1 . num_divisors
-
