@@ -18,8 +18,7 @@ solution = [(a,b,c) | a <- fourDigitPrimes
                     , b <- permutations a
                     , a < b && isPrime' b
                     , c <- permutations a
-                    , a < c && b < c && (b - a) == (c - b) && isPrime' c
-            ]
+                    , a < c && b < c && (b - a) == (c - b) && isPrime' c]
   where
     memo = (tabulate (1000, 10000) (\n -> isPrime n))
     isPrime' = (memo!)
