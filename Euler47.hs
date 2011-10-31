@@ -2,7 +2,7 @@ module Main
     where
 
 import Data.List
-import NumberTheory.Sieve.Factor
+import Math.Sieve.Factor
 import Common (defactorize)
 
 sum' :: [Int] -> Int

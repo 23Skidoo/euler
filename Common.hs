@@ -8,6 +8,7 @@ module Common (inputFileInteract, readWords, numberToDigits, defactorize,
 import Data.Array (Ix, Array, (!), array, range)
 import Data.Char (digitToInt)
 import Data.List ((\\), delete, group)
+import qualified Math.Sieve.Factor as F
 import System (getArgs)
 
 -- A version of 'interact' that can read files provided on command-line.
@@ -116,14 +117,15 @@ isHexagonal n = (fromIntegral . ceiling $ test) == test
       test = (sqrt (8 * fromIntegral n + 1) + 1)/4
 
 -- Primality test and prime number generator.
-isPrime :: (Integral a) => a -> Bool
-isPrime n | n < 2     = False
-          | otherwise = all (\p -> n `mod` p > 0) (factorsToTry n)
-          where
-            factorsToTry x = takeWhile (\p -> p*p <= x) primes
 
-primes :: Integral a => [a]
-primes = 2 : [ x | x <- filter isPrime [3..]]
+isPrime :: (Integral a) => a -> Bool
+isPrime = F.isPrime factorSieve
+
+factorSieve :: F.FactorSieve
+factorSieve = F.sieve 1000000
+
+primes :: (Integral a) => [a]
+primes = filter isPrime [2..]
 
 nthPrime :: (Integral a) => Int -> a
 nthPrime n = primes !! (n-1)
