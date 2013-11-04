@@ -9,7 +9,7 @@ import Data.Array (Ix, Array, (!), array, range)
 import Data.Char (digitToInt)
 import Data.List ((\\), delete, group)
 import qualified Math.Sieve.Factor as F
-import System (getArgs)
+import System.Environment (getArgs)
 
 -- A version of 'interact' that can read files provided on command-line.
 -- Used like this: main = inputFileInteract processInput.
