@@ -1,7 +1,6 @@
 module Main
        where
 
-import Debug.Trace
 import Common (isPrime)
 
 data SpiralState = SpiralState {

@@ -98,6 +98,7 @@ triangle = [n*(n + 1) `div` 2 | n <- [1..]]
 isTriangle :: (Integral a) => a -> Bool
 isTriangle n = (fromIntegral . ceiling $ test) == test
     where
+      test :: Double
       test = (sqrt(8 * fromIntegral n + 1) - 1)/2
 
 pentagonal :: (Num a, Enum a, Integral a) => [a]
@@ -106,6 +107,7 @@ pentagonal = [n*(3*n - 1) `div` 2 | n <- [1..]]
 isPentagonal :: (Integral a) => a -> Bool
 isPentagonal n = (fromIntegral . ceiling $ test) == test
     where
+      test :: Double
       test = (sqrt (24 * fromIntegral n + 1) + 1)/6
 
 hexagonal :: (Num a, Enum a, Integral a) => [a]
@@ -114,6 +116,7 @@ hexagonal = [n*(2*n - 1) | n <- [1..]]
 isHexagonal :: (Integral a) => a -> Bool
 isHexagonal n = (fromIntegral . ceiling $ test) == test
     where
+      test :: Double
       test = (sqrt (8 * fromIntegral n + 1) + 1)/4
 
 -- Primality test and prime number generator.
@@ -122,7 +125,7 @@ isPrime :: (Integral a) => a -> Bool
 isPrime = F.isPrime factorSieve
 
 factorSieve :: F.FactorSieve
-factorSieve = F.sieve 1000000
+factorSieve = F.sieve (1000000 :: Int)
 
 primes :: (Integral a) => [a]
 primes = filter isPrime [2..]
