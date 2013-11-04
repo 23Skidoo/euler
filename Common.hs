@@ -1,4 +1,8 @@
-module Common (inputFileInteract, readWords, numberToDigits, defactorize,
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE BangPatterns        #-}
+
+module Common (inputFileInteract, inputLinesInteract,
+    readWords, numberToDigits, defactorize,
     digitsToNumber, digits, digits10, digits2, isPalindromic, fac, binomial,
     uniq, permutations, tabulate, dp, isTriangle, triangle, isPentagonal,
     pentagonal, isHexagonal, hexagonal, isPrime, primes, nthPrime, factorize,
@@ -10,6 +14,7 @@ import Data.Char (digitToInt)
 import Data.List ((\\), delete, group)
 import qualified Math.Sieve.Factor as F
 import System.Environment (getArgs)
+import System.IO (Handle, IOMode(ReadMode), openFile, hGetLine, hIsEOF, stdin)
 
 -- A version of 'interact' that can read files provided on command-line.
 -- Used like this: main = inputFileInteract processInput.
@@ -19,6 +24,25 @@ inputFileInteract processInput =
        case args of
          [] ->  getContents >>= (print . processInput)
          (x:_) -> readFile x >>= (print . processInput)
+
+-- Like 'inputFileInteract', but processes input line-by-line.
+inputLinesInteract :: forall state .
+                      (state -> String -> state) -> state -> IO state
+inputLinesInteract processLine initialState = do
+  args <- getArgs
+  case args of
+    []    -> go initialState stdin
+    (x:_) -> openFile x ReadMode >>= go initialState
+
+  where
+    go :: state -> Handle -> IO state
+    go !s h = do
+      eof <- hIsEOF h
+      if eof
+        then return s
+        else do l <- hGetLine h
+                go (processLine s l) h
+
 
 -- "\"abc\", \"def\", \"ghi\"" -> ["abc", "def", "ghi"].
 readWords :: String -> [String]
