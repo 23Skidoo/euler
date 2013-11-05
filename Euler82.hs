@@ -29,14 +29,14 @@ parse f = listArray ((0,0),(w,w)) lst
     w   = count ',' . takeWhile (/= '\n') $ f
 
 solve :: Array (Int,Int) Int -> Int
-solve inparr = go initialState
+solve inparr = loop initialState
   where
     w     = fst . snd . bounds $ inparr
-    go st = let curCol'   = curCol st + 1
-                curState' = updateState curCol' (curState st)
-            in if curCol' == w
-               then extractAnswer curState'
-               else go (State curCol' curState')
+    loop st = let curCol'   = curCol st + 1
+                  curState' = updateState curCol' (curState st)
+              in if curCol' == w
+                 then extractAnswer curState'
+                 else loop (State curCol' curState')
 
     extractAnswer :: Array Int Int -> Int
     extractAnswer = minimum . elems
@@ -53,30 +53,20 @@ solve inparr = go initialState
       return state'
 
     calcVal :: Array Int Int -> Int -> Int -> Int
-    calcVal state row col = min (goUp   (row - 1) own initial)
-                                (goDown (row + 1) own initial)
+    calcVal state row col = min (go (row - 1) own initial pred)
+                                (go (row + 1) own initial succ)
       where
-        initial = state ! row + own
+        initial = state  ! row + own
         own     = inparr ! (row, col)
 
-        updateMinLen i curLen minLen = (curLen', minLen')
+        go i curLen minLen advance
+          | i < 0           = minLen
+          | i > w           = minLen
+          | curLen > minLen = minLen
+          | otherwise       = go (advance i) curLen' minLen' advance
           where
             curLen' = curLen + inparr ! (i, col)
             minLen' = min minLen (curLen' + state ! i)
-
-        goUp i curLen minLen
-          | i < 0           = minLen
-          | curLen > minLen = minLen
-          | otherwise       = goUp (i-1) curLen' minLen'
-          where
-            (curLen', minLen') = updateMinLen i curLen minLen
-
-        goDown i curLen minLen
-          | i > w           = minLen
-          | curLen > minLen = minLen
-          | otherwise       = goDown (i+1) curLen' minLen'
-          where
-            (curLen', minLen') = updateMinLen i curLen minLen
 
 count :: Eq a => a -> [a] -> Int
 count elt = foldl' (\i e -> i + if e == elt then 1 else 0) 0
